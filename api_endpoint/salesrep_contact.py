@@ -15,3 +15,6 @@ class SalesRepContact:
                 "created": datetime.now().timestamp()
             }
         )
+
+    def get_users_for_call(self):
+        return self.users_to_contact

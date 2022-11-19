@@ -243,7 +243,7 @@ async def show_prices(period: str):
 async def register_user_for_call(username: str, phone_num: str,
                                  email: str, postcode: str):
     """
-    Registers a new uset to be called by the company sales rep with offer.
+    Schedules a new uset to be called by the company sales rep with offer.
     :param username: User name
     :param phone_num: Phone number of the user
     :param email: E-mail of the user
@@ -251,6 +251,15 @@ async def register_user_for_call(username: str, phone_num: str,
     """
     sales_rep_contact.save_user_for_call(username=username, phone_num=phone_num,
                                          email=email, zip=postcode)
+
+
+@app.post("/contacts/get_users_for_call")
+async def get_users_for_call():
+    """
+    Returns the list of users scheduled for a call by the sales rep.
+    :return: List of users scheduled for the call by sales rep.
+    """
+    return sales_rep_contact.get_users_for_call()
 
 
 ########################################
