@@ -14,14 +14,13 @@ class CUser:
     def add_consumption(self):
         pass
 
-
     def add_address(self, zip_code):
         pass
-
 
     """
     Shows how many days is user active in the app
     """
+
     def active(self):
         return len(self.power_consumption)
 

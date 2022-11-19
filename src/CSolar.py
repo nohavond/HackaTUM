@@ -19,6 +19,12 @@ class CSolar:
     """
 
     def show_savings(self, period, user=CUser()):
+        """
+        Calculates the savings for
+        :param period: string literal year / month / day
+        :param user:
+        :return:
+        """
         if len(user.power_consumption) == 0:
             print('You could have saved: 0€')
             return
@@ -48,7 +54,7 @@ class CSolar:
                 eco_bill += (price * eco_consumption)
             start_date += delta
 
-        return normal_bill - eco_bill
+        return (normal_bill - eco_bill) / 1000
 
     # calculate generated energy based on number of hours of daylight
     # for simplification we expect sun light to be const value of 4 hours

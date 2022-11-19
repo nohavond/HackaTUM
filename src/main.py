@@ -20,12 +20,20 @@ from pydantic import BaseModel
 from api_errors import ApiErrors
 from authentication import Authentication
 from news_fetcher import NewsFetcher
+from CSolar import CSolar
+from CUser import CUser
+from CStock import CStock
 
 news_fetcher = NewsFetcher()
 app = FastAPI()
 authentication = Authentication()
+c_solar = CSolar()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+dummy_user = CUser()
+dummy_user.generate_data()
+dummy_stock = CStock()
 
 FORBIDDEN_EXCEPTION = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
@@ -137,6 +145,24 @@ async def get_feeds(user_id: int):
     if err_code == 1:
         raise HTTPException(406, ApiErrors.ERR_USR_NOT_FOUND)
     return res
+
+
+########################################
+#       CALCULATION OF SAVINGS         #
+########################################
+
+@app.post("/savings/show_savings")
+async def show_savings(period: str):
+    if period not in ("year", "month", "week", "day"):
+        raise HTTPException(400)
+    return {"saved": c_solar.show_savings(period, dummy_user)}
+
+
+@app.post("/savings/show_prices")
+async def show_prices(period: str):
+    if period not in ("year", "month", "week", "day"):
+        raise HTTPException(400)
+    return dummy_stock.get_prices(period)
 
 
 if __name__ == '__main__':
