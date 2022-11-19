@@ -6,7 +6,12 @@ class CTime:
         self.base = datetime.date.today()
 
     def get_date(self, period):
-        if period == 'today':
+        """
+        calculates days in given period of time
+        :param period: string literal year / month / week / day
+        :return: marginal values -> tuple (date, date)
+        """
+        if period == 'day':
             start_date, end_date = self.__day()
 
         elif period == 'week':
@@ -22,14 +27,26 @@ class CTime:
         return start_date, end_date
 
     def __day(self):
+        """
+        calcultes current day
+        :return:  marginal values -> tuple (date, date)
+        """
         dates = [self.base - datetime.timedelta(days=x) for x in range(1)]
         return dates[-1], dates[0]
 
     def __week(self):
+        """
+        calculates week length of days
+        :return: marginal values -> tuple (date, date)
+        """
         dates = [self.base - datetime.timedelta(days=x) for x in range(7)]
         return dates[-1], dates[0]
 
     def __month(self):
+        """
+        calculates month lenght of days
+        :return: marginal values -> tuple (date, date)
+        """
         dates = [self.base - datetime.timedelta(days=x) for x in range(30)]
         return dates[-1], dates[0]
 

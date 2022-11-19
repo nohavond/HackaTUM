@@ -2,7 +2,6 @@ import datetime
 import time
 
 import feedparser
-import uvicorn
 
 ERR_USR_NOT_FOUND = \
     {
@@ -119,7 +118,7 @@ class NewsFetcher:
         }
         current_feeds.append(new_entry)
         self.tmp_feed_list[user_id] = current_feeds
-        return 0, {}
+        return 0
 
     def rm_rss_feed(self, user_id: int, rss_feed_id: int):
         """
