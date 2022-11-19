@@ -13,6 +13,12 @@ class CUser:
     def add_consumption(self):
         pass
 
+    """
+    Shows how many days is user active in the app
+    """
+    def active(self):
+        return len(self.power_consumption)
+
     def get_consumption(self, period=None):
         if period is None:
             return self.power_consumption
@@ -29,8 +35,6 @@ class CUser:
             d.update({start_date: watts})
             start_date += delta
         return d
-
-        # generates data from a user to show how our application works
 
     def generate_data(self):
         start_date = datetime.date(2016, 1, 1)
