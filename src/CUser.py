@@ -4,14 +4,20 @@ import datetime
 
 
 class CUser:
-    def __init__(self):
+    def __init__(self, zip_code=None):
         # key = date, watts = value
         self.power_consumption = {}
         self.ctime = CTime()
+        self.zip = zip_code
 
     # add today's consumption
     def add_consumption(self):
         pass
+
+
+    def add_address(self, zip_code):
+        pass
+
 
     """
     Shows how many days is user active in the app
