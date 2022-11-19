@@ -12,7 +12,7 @@ class SalesRepContact:
                 "phone_num": phone_num,
                 "email": email,
                 "zip": zip,
-                "timestamp": datetime.now().timestamp()
+                "timestamp": datetime.now().strftime("%m/%d/%Y")
             }
         )
 
