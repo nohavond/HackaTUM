@@ -1,20 +1,20 @@
 from datetime import datetime
+import Database as db
 
 
 class SalesRepContact:
-    def __init__(self):
+    def __init__(self, database: db.CDatabase):
         self.users_to_contact = []
+        self.database = database
 
     def save_user_for_call(self, username: str, phone_num: str, email: str, zip: str):
-        self.users_to_contact.append(
-            {
-                "username": username,
-                "phone": phone_num,
-                "email": email,
-                "zip": zip,
-                "timestamp": datetime.now().strftime("%m/%d/%Y")
-            }
-        )
+        self.database.add_data({
+            "username": username,
+            "phone": phone_num,
+            "email": email,
+            "zip": zip,
+            "timestamp": datetime.now().strftime("%m/%d/%Y")
+        })
 
     def get_users_for_call(self):
         return self.users_to_contact

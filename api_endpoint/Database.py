@@ -37,6 +37,5 @@ class CDatabase:
 
     def add_data(self, data):
         self.conn = sqlite3.connect(self.name)
-        user_data = (data['username'], data['phone'], data['email'], data[zip], data['timestamp'])
+        user_data = (data['username'], data['phone'], data['email'], data['zip'], data['timestamp'])
         self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values (?,?,?,?,?)", user_data);
-

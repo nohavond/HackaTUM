@@ -4,7 +4,6 @@ import pandas as pd
 
 
 class App:
-
     def __init__(self):
         self.users = {}
 
@@ -13,4 +12,3 @@ class App:
         users = load_users()
         df = pd.DataFrame(users)
         st.table(df)
-

@@ -25,14 +25,18 @@ from authentication import Authentication
 from news_fetcher import NewsFetcher
 from salesrep_contact import SalesRepContact
 from package_offers import PackageOffers
+from Database import CDatabase
 
 app = FastAPI()  # the main API instance
+
+# Initialize database
+db = CDatabase()
 
 # Instances of classes which save the current state of all the data
 news_fetcher = NewsFetcher()
 authentication = Authentication()
 c_solar = CSolar()
-sales_rep_contact = SalesRepContact()
+sales_rep_contact = SalesRepContact(db)
 package_offers = PackageOffers()
 
 # Dummy users for demonstration purposes
@@ -274,5 +278,9 @@ async def get_package_offers():
     return package_offers.get_package_offers()
 
 
-if __name__ == '__main__':
+def main():
     uvicorn.run("api_endpoint:app", reload=True, host="131.159.198.100")
+
+
+if __name__ == '__main__':
+    main()
