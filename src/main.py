@@ -6,11 +6,8 @@ def main():
     dummy_user = CUser()
     dummy_user.generate_data()
 
-    data = dummy_user.get_consumption('today')
-    for date, watts in data.items():
-        print(date, watts)
-
     solar = CSolar()
+    solar.show_savings('today')
 
 
 if __name__ == "__main__":

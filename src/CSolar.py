@@ -1,24 +1,30 @@
 from CTime import CTime
+from CUser import CUser
+import pandas as pd
+from CStock import CStock
 
 
 class CSolar:
     def __init__(self):
         self.ctime = CTime()
+        self.stock = CStock()
 
     # compare energy consumption with current
     # energy prices in germany and show the user
-    # how much money can he save
-    def show_savings(self, user, period):
-        if period == 'week':
-            dates = self.ctime.week()
+    # how much money he can save
+    def show_savings(self, period, user=CUser()):
+        if len(user.power_consumption) == 0:
+            print('You could have saved: 0€')
+            return
 
-        elif period == 'month':
-            dates = self.ctime.month()
+        dates = user.get_consumption(period)
+        print(len(dates))
+        result = 0
+        print('You could have saved: ' + str(result) + '€')
 
-        else:
-            dates = self.ctime.year()
 
-    # show current MWh prices in chosen period
-    def show_prices(self, period):
-        pass
 
+    # calculate generated energy based on number of hours of daylight
+    # for simplification we expect sun light to be const value of 4 hours
+    def __generated_energy(self, sunlight=4, panel_power=400):
+        return panel_power * sunlight
