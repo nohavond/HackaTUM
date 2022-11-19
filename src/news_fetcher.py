@@ -1,3 +1,6 @@
+import datetime
+import time
+
 import feedparser
 import uvicorn
 
@@ -27,9 +30,36 @@ class RSSFeed:
 class NewsFetcher:
     def __init__(self):
         self.tmp_feed_list = dict()
+        self.cached_feeds = dict()
 
     def _get_news_single_rss(self, rss_feed: str):
-        pass
+        """
+        Fetches the news from the selected RSS, either from local cache
+        or from the URL if the cache is too old.
+        :param rss_feed: URL of the RSS feed to fetch
+        :return: List of articles of said RSS feed
+        """
+        is_cached = rss_feed in self.cached_feeds.keys()
+        if is_cached:
+            cached_feed = self.cached_feeds[rss_feed]
+            update_time_delta = datetime.datetime.now().timestamp() - cached_feed["last_update"]
+            if update_time_delta < 10 * 60:
+                return cached_feed["articles"]
+        parsed: feedparser.FeedParserDict = feedparser.parse(rss_feed)
+        result = []
+        for entry in parsed.entries[:10]:
+            article = {
+                "title": entry["title"],
+                "description": entry["description"],
+                "utc": time.mktime(entry["published_parsed"])
+            }
+            result.append(article)
+        self.cached_feeds[rss_feed] = \
+            {
+                "last_update": datetime.datetime.now().timestamp(),
+                "articles": result
+            }
+        return result
 
     def _get_next_rss_id(self, user_id: int):
         if user_id not in self.tmp_feed_list.keys():
@@ -39,7 +69,19 @@ class NewsFetcher:
         return 0, max(ids) + 1
 
     def get_news_all_rss(self, user_id: int):
-        pass
+        """
+        Fetches all the news from the specified users' all RSS feeds.
+        :param user_id: ID of users to fetch news for
+        :return: List of articles of all RSS feeds
+        """
+        err_code, rss_feeds = self.get_rss_feed_list(user_id)
+        if err_code != 0:
+            return err_code, {}
+        all_articles = []
+        for feed in rss_feeds["rss_feed_list"]:
+            all_articles += self._get_news_single_rss(feed["feed_url"])
+        all_articles.sort(key=lambda x: x["utc"], reverse=True)
+        return all_articles
 
     def get_rss_feed_list(self, user_id: int):
         if user_id not in self.tmp_feed_list.keys():
