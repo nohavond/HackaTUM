@@ -237,20 +237,40 @@ async def show_prices(period: str):
 
 
 ########################################
-#     PACKAGE OFFERS API ENDPOINTS     #
+#       SALES REP API ENDPOINTS        #
 ########################################
 @app.post("/contacs/register_user_for_call")
 async def register_user_for_call(username: str, phone_num: str,
                                  email: str, postcode: str):
+    """
+    Schedules a new uset to be called by the company sales rep with offer.
+    :param username: User name
+    :param phone_num: Phone number of the user
+    :param email: E-mail of the user
+    :param postcode: Postcode of the user
+    """
     sales_rep_contact.save_user_for_call(username=username, phone_num=phone_num,
                                          email=email, zip=postcode)
+
+
+@app.post("/contacts/get_users_for_call")
+async def get_users_for_call():
+    """
+    Returns the list of users scheduled for a call by the sales rep.
+    :return: List of users scheduled for the call by sales rep.
+    """
+    return sales_rep_contact.get_users_for_call()
 
 
 ########################################
 #     PACKAGE OFFERS API ENDPOINTS     #
 ########################################
 @app.post("/packages/get_offers")
-async def get_package_offers(offers: int):
+async def get_package_offers():
+    """
+    Returns the package offers for the user
+    :return: Package offers for the user
+    """
     return package_offers.get_package_offers()
 
 

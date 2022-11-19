@@ -12,6 +12,9 @@ class SalesRepContact:
                 "phone_num": phone_num,
                 "email": email,
                 "zip": zip,
-                "created": datetime.now().timestamp()
+                "timestamp": datetime.now().strftime("%m/%d/%Y")
             }
         )
+
+    def get_users_for_call(self):
+        return self.users_to_contact
