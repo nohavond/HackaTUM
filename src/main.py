@@ -139,5 +139,8 @@ async def get_feeds(user_id: int):
     return res
 
 
+
+
+
 if __name__ == '__main__':
     uvicorn.run("main:app", reload=True, host="192.168.43.52")
