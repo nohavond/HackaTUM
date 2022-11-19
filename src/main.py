@@ -44,12 +44,12 @@ async def add_feed(user_id: int, rss_feed_url: str):
 
 @app.post("/news/remove_feed")
 async def remove_feed(user_id: int, rss_feed_id: int):
-    err_code, res = news_fetcher.rm_rss_feed(user_id, rss_feed_id)
+    err_code = news_fetcher.rm_rss_feed(user_id, rss_feed_id)
     if err_code == 1:
         raise HTTPException(406, ERR_USR_NOT_FOUND)
     if err_code == 2:
         raise HTTPException(406, ERR_RSS_FEED_NOT_FOUND)
-    return
+    return {}
 
 
 @app.post("/news/get_feeds_list")
