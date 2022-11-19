@@ -13,6 +13,10 @@ class CStock:
     # for the future there can be used site https://tradingeconomics.com/germany/electricity-price
     # they also do provide simple API to get their data, but we do not have permission to access them
     def __get_data(self):
+        """
+        Reads data from JSON file
+        :return: None
+        """
         with open('stock_dummy.json') as json_file:
             power_prices = json.load(json_file)
 
@@ -22,6 +26,11 @@ class CStock:
 
     # show current MWh prices in chosen period
     def get_prices(self, period):
+        """
+        Calculates the prices of electricity over given period of time
+        :param period: string literal year / month / week / day
+        :return: dictionary (key: date, value: price)
+        """
         start_date, end_date = self.ctime.get_date(period)
         d = dict()
         delta = datetime.timedelta(days=1)

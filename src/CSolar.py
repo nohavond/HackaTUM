@@ -6,32 +6,30 @@ from CUser import CUser
 
 
 class CSolar:
+
     def __init__(self):
         self.ctime = CTime()
         self.stock = CStock()
 
-    """
-    compare energy consumption with current
-    energy prices in germany and show the user
-    how much money he can save, for each day we
-    take into account current day price of energy
-    """
-
     def show_savings(self, period, user=CUser()):
         """
-        Calculates the savings for
+        Calculates the savings for the specified user in a specified period.
         :param period: string literal year / month / day
-        :param user:
-        :return:
+        :param user: User to calculate the savings for
+        :return: Tuple representing money saved, normal bill and eco bill
         """
         if len(user.power_consumption) == 0:
-            print('You could have saved: 0€')
-            return
+            return 0
 
-        result = self.__calculate_savings(period, user)
-        print('You could have saved: ' + format(result, ',.2f') + '€')
+        return self.__calculate_savings(period, user)
 
     def __calculate_savings(self, period, user):
+        """
+        Internal method for getting result for show_savings method
+        :param period: string literal year / month / day
+        :param user: User to calculate savings for
+        :return: Tuple representing money saved, normal bill and eco bill
+        """
         start_date, end_date = self.ctime.get_date(period)
         price_data = self.stock.get_prices(period)
         user_data = user.get_consumption(period)
@@ -53,9 +51,14 @@ class CSolar:
                 eco_bill += (price * eco_consumption)
             start_date += delta
 
-        return (normal_bill - eco_bill) / 1000
+        return (normal_bill - eco_bill) / 1000, normal_bill, eco_bill
 
-    # calculate generated energy based on number of hours of daylight
-    # for simplification we expect sun light to be const value of 4 hours
     def __generated_energy(self, sunlight=4, panel_power=400):
+        """
+        Calculates generated energy based on number of daylight.
+        For simplification, we expect sun light to be const value of 4 hours.
+        :param sunlight: The hours of sunlight in a day
+        :param panel_power: A wattage of a single solar panel
+        :return: Amount of generated energy per day
+        """
         return panel_power * sunlight

@@ -24,16 +24,23 @@ from api_errors import ApiErrors
 from authentication import Authentication
 from news_fetcher import NewsFetcher
 
+app = FastAPI()  # the main API instance
+
+# Instances of classes which save the current state of all the data
 news_fetcher = NewsFetcher()
-app = FastAPI()
 authentication = Authentication()
 c_solar = CSolar()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
+# Dummy users for demonstration purposes
 dummy_user = CUser()
 dummy_user.generate_data()
 dummy_stock = CStock()
+
+########################################
+#    Necessities for FastAPI OAuth2    #
+########################################
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 FORBIDDEN_EXCEPTION = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
@@ -61,6 +68,13 @@ class UserInDB(User):
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
+    """
+    Deserializes the specified access token and returns the corresponding
+    user info.
+    IMPORTANT: OAuth2 functionality, currently not in use (only future proofing).
+    :param token: Token of the user to parse
+    :return: Parsed user data from the token
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -88,6 +102,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
 
 @app.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Logs the user in and creates and returns his token.
+    IMPORTANT: OAuth2 functionality, currently not in use (only future proofing).
+    :param form_data: Form data of the user (username, password)
+    :return: Newly generated token for the user
+    """
     res = authentication.validate_user(form_data.username, form_data.password)
     if res in (authentication.ERR_USR_NOT_FOUND, authentication.ERR_PWD_INVALID):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
@@ -100,11 +120,24 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 ########################################
 @app.post("/auth/create_user")
 async def create_user(user_name: str, pwd: str):
+    """
+    Creates a new user for OAuth2 purposes.
+    IMPORTANT: OAuth2 functionality, currently not in use (only future proofing).
+    :param user_name: Name of the user to create
+    :param pwd: Password of the user (hashed and saved into local database)
+    """
     authentication.add_user(user_name, pwd)
+    return {}
 
 
 @app.post("/auth/get_my_info")
 async def get_user_info(user: UserInDB = Depends(get_current_user)):
+    """
+    Returns the info about the current user.
+    IMPORTANT: OAuth2 functionality, currently not in use (only future proofing).
+    :param user: Instance of the user to return the info of
+    :return: Info about the current OAuth2 user.
+    """
     return {"id": user.id,
             "username": user.username}
 
@@ -114,6 +147,11 @@ async def get_user_info(user: UserInDB = Depends(get_current_user)):
 ########################################
 @app.get("/news/get_news")
 async def get_news(user_id: int):
+    """
+    Returns all the news from all the newsfeeds of the specified user.
+    :param user_id: ID of the user to get the newsfeed for
+    :return: List of news for the user
+    """
     err_code, res = news_fetcher.get_news_all_rss(user_id)
     if err_code == 1:
         raise HTTPException(406, ApiErrors.ERR_USR_NOT_FOUND)
@@ -122,15 +160,25 @@ async def get_news(user_id: int):
 
 @app.post("/news/add_feed")
 async def add_feed(user_id: int, rss_feed_url: str):
+    """
+    Adds a RSS feed to the list of users' feed
+    :param user_id: ID of the user to add the RSS feed to
+    :param rss_feed_url: RSS feed URL to add to the user
+    """
     # if user.id != user_id:
     #     raise FORBIDDEN_EXCEPTION
-    err_code, res = news_fetcher.add_rss_feed(user_id, rss_feed_url)
+    err_code = news_fetcher.add_rss_feed(user_id, rss_feed_url)
     assert err_code == 0
-    return res
+    return {}
 
 
 @app.post("/news/remove_feed")
 async def remove_feed(user_id: int, rss_feed_id: int):
+    """
+    Removes a RSS feed from the list of users' feeds.
+    :param user_id: ID of the user to remove the feed from
+    :param rss_feed_id: ID of the feed to remove from the users' feed
+    """
     err_code = news_fetcher.rm_rss_feed(user_id, rss_feed_id)
     if err_code == 1:
         raise HTTPException(406, ApiErrors.ERR_USR_NOT_FOUND)
@@ -141,6 +189,11 @@ async def remove_feed(user_id: int, rss_feed_id: int):
 
 @app.post("/news/get_feeds_list")
 async def get_feeds(user_id: int):
+    """
+    Returns the list of RSS feeds of the specified user.
+    :param user_id: ID of the user to get the list of feeds of.
+    :return: List of the users' RSS feeds URLs.
+    """
     err_code, res = news_fetcher.get_rss_feed_list(user_id)
     if err_code == 1:
         raise HTTPException(406, ApiErrors.ERR_USR_NOT_FOUND)
@@ -153,13 +206,27 @@ async def get_feeds(user_id: int):
 
 @app.post("/savings/show_savings")
 async def show_savings(period: str):
+    """
+    Calculates the savings of the user at the specified period.
+    IMPORTANT: Currently we work with only one dummy user.
+    :param period: String literal year/month/week/day
+    :return: dict {money saved, normal_bill, eco bill}
+    """
     if period not in ("year", "month", "week", "day"):
         raise HTTPException(400)
-    return {"saved": c_solar.show_savings(period, dummy_user)}
+    money_saved, normal_bill, eco_bill = c_solar.show_savings(period, dummy_user)
+    return {"money_saved": money_saved,
+            "normal_bill": normal_bill,
+            "eco_bill": eco_bill}
 
 
 @app.post("/savings/show_prices")
 async def show_prices(period: str):
+    """
+    Shows the prices of electricity for the specified period.
+    :param period: String literal year/month/week/day
+    :return: Dictionary, keys are the dates, values are the average prices
+    """
     if period not in ("year", "month", "week", "day"):
         raise HTTPException(400)
     return dummy_stock.get_prices(period)
