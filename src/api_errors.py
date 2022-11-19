@@ -1,4 +1,7 @@
 class ApiErrors:
+    """
+    Class for collecting the error messages for the API.
+    """
     ERR_USR_NOT_FOUND = \
         {
             "error": {
