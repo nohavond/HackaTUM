@@ -65,10 +65,12 @@ class NewsFetcher:
     def rm_rss_feed(self, user_id: int, rss_feed_id: int):
         if user_id not in self.tmp_feed_list.keys():
             return 1
-        ids = [a['id'] for a in self.tmp_feed_list[user_id]]
+        rss_feeds = self.get_rss_feed_list(user_id)[1]['rss_feed_list']
+        ids = [rss_feed['feed_id'] for rss_feed in rss_feeds]
         if rss_feed_id not in ids:
             return 2
-        feed_list: list = self.tmp_feed_list[user_id]
-        rss_to_remove = [a for a in feed_list if a['feed_id'] == rss_feed_id]
-        feed_list.remove(rss_to_remove)
+        rss_to_remove = [a for a in rss_feeds if a['feed_id'] == rss_feed_id]
+        assert len(rss_to_remove) == 1
+        rss_feeds.remove(rss_to_remove[0])
+        self.tmp_feed_list[user_id] = rss_feeds
         return 0
