@@ -1,6 +1,8 @@
+import random
+
 from CTime import CTime
 from CUser import CUser
-import pandas as pd
+import datetime
 from CStock import CStock
 
 
@@ -15,17 +17,38 @@ class CSolar:
     how much money he can save, for each day we
     take into account current day price of energy
     """
+
     def show_savings(self, period, user=CUser()):
         if len(user.power_consumption) == 0:
             print('You could have saved: 0€')
             return
 
-        dates = user.get_consumption(period)
-        result = 0
-        print('You could have saved: ' + str(result) + '€')
+        result = self.__calculate_savings(period, user)
+        print('You could have saved: ' + format(result, ',.2f') + '€')
 
-    def __calcualte_savings(self, period):
-        pass
+    def __calculate_savings(self, period, user):
+        start_date, end_date = self.ctime.get_date(period)
+        price_data = self.stock.get_prices(period)
+        user_data = user.get_consumption(period)
+
+        delta = datetime.timedelta(days=1)
+
+        normal_bill = 0
+        eco_bill = 0
+        while start_date <= end_date:
+            user_consumption = user_data.get(start_date)
+            price = price_data.get(start_date)
+            could_be_generated = self.__generated_energy()
+
+            normal_bill += (price * user_consumption)
+            # consumption with solar panels
+            eco_consumption = user_consumption - could_be_generated
+
+            if eco_consumption > 0:
+                eco_bill += (price * eco_consumption)
+            start_date += delta
+
+        return normal_bill - eco_bill
 
     # calculate generated energy based on number of hours of daylight
     # for simplification we expect sun light to be const value of 4 hours

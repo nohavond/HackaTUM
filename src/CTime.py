@@ -17,7 +17,8 @@ class CTime:
 
         elif period == 'year':
             start_date, end_date = self.__year()
-
+        else:
+            return None
         return start_date, end_date
 
     def __day(self):

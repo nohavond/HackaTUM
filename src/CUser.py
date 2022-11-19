@@ -24,7 +24,6 @@ class CUser:
             return self.power_consumption
 
         start_date, end_date = self.ctime.get_date(period)
-
         d = dict()
         delta = datetime.timedelta(days=1)
 
@@ -42,6 +41,6 @@ class CUser:
         delta = datetime.timedelta(days=1)
 
         while start_date <= end_date:
-            random_wt = random.uniform(0.01, 0.02)
+            random_wt = random.uniform(800, 3000)
             self.power_consumption.update({start_date: random_wt})
             start_date += delta
