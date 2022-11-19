@@ -1,9 +1,8 @@
-import random
+import datetime
 
+from CStock import CStock
 from CTime import CTime
 from CUser import CUser
-import datetime
-from CStock import CStock
 
 
 class CSolar:

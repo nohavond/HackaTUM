@@ -2,7 +2,6 @@ import datetime
 import time
 
 import feedparser
-import uvicorn
 
 ERR_USR_NOT_FOUND = \
     {

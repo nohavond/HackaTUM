@@ -1,6 +1,7 @@
-from CTime import CTime
-import random
 import datetime
+import random
+
+from CTime import CTime
 
 
 class CUser:

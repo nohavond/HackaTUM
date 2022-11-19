@@ -17,12 +17,12 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError
 from pydantic import BaseModel
 
+from CSolar import CSolar
+from CStock import CStock
+from CUser import CUser
 from api_errors import ApiErrors
 from authentication import Authentication
 from news_fetcher import NewsFetcher
-from CSolar import CSolar
-from CUser import CUser
-from CStock import CStock
 
 news_fetcher = NewsFetcher()
 app = FastAPI()

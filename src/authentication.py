@@ -1,11 +1,11 @@
+import os
 from datetime import datetime, timedelta
 from typing import Union
 
 import cryptography.exceptions
-from jose import JWTError, jwt
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import os
+from jose import jwt
 
 
 class Authentication:
