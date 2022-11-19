@@ -9,34 +9,36 @@ __author__ = "Martin Mackovik, Ondrej Nohava, Alphar Abdugeni, Malaz Tamim"
 __version__ = "0.1.0"
 __license__ = "MIT"
 
+from fastapi import FastAPI
 import argparse
 
-
-def main(args):
-    """ Main entry point of the app """
-    print("hello world")
-    print(args)
+app = FastAPI()
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+@app.get("/")
+async def root():
+    return {"Message": "Hello world!"}
 
-    # # Optional argument which requires a parameter (eg. -d test)
-    # parser.add_argument("-n", "--name", action="store", dest="name")
-    #
-    # # Optional verbosity counter (eg. -v, -vv, -vvv, etc.)
-    # parser.add_argument(
-    #     "-v",
-    #     "--verbose",
-    #     action="count",
-    #     default=0,
-    #     help="Verbosity (-v, -vv, etc)")
 
-    # Specify output of "--version"
-    parser.add_argument(
-        "--version",
-        action="version",
-        version="%(prog)s (version {version})".format(version=__version__))
+@app.get("/news/get_news")
+async def get_news():
+    return {"articles": [
+        {"title": "Title of an article",
+         "description": "Short description of an article",
+         "long_text": "Long text of an article"}
+    ]}
 
-    args = parser.parse_args()
-    main(args)
+
+@app.post("/news/add_feed")
+async def add_feed():
+    return {}
+
+
+@app.post("/news/remove_feed")
+async def remove_feed():
+    return {}
+
+
+@app.post("/news/get_feeds_list")
+async def get_feeds():
+    return {}
