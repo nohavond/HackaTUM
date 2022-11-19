@@ -21,13 +21,12 @@ ERR_RSS_FEED_NOT_FOUND = \
     }
 
 
-class RSSFeed:
-    def __init__(self, rss_id: int, rss_url: str):
-        self.rss_id = rss_id
-        self.rss_url = rss_url
-
-
 class NewsFetcher:
+    """
+    Class used for management of RSS feeds list for every user
+    and for parsing and returning news from said RSS feeds.
+    """
+
     def __init__(self):
         self.tmp_feed_list = dict()
         self.cached_feeds = dict()
@@ -62,6 +61,11 @@ class NewsFetcher:
         return result
 
     def _get_next_rss_id(self, user_id: int):
+        """
+        Returns the next free ID of RSS feed for the specified user.
+        :param user_id: ID of user to find free RSS id for.
+        :return: Free RSS feed id fot the specified user
+        """
         if user_id not in self.tmp_feed_list.keys():
             return 0, 0
         rss_feeds = self.get_rss_feed_list(user_id)
@@ -84,6 +88,11 @@ class NewsFetcher:
         return all_articles
 
     def get_rss_feed_list(self, user_id: int):
+        """
+        Returns the list of RSS feeds for the specified user.
+        :param user_id: ID of the user to get the RSS feed list for
+        :return: List of RSS feeds of the user
+        """
         if user_id not in self.tmp_feed_list.keys():
             return 1, {}
         return 0, {
@@ -93,6 +102,12 @@ class NewsFetcher:
         }
 
     def add_rss_feed(self, user_id: int, rss_feed: str):
+        """
+        Adds a RSS feed to the list of users' RSS feeds
+        :param user_id: ID of the user to add the feed to
+        :param rss_feed: URL of the RSS feed to add to the user
+        :return: Error code
+        """
         current_feeds = self.tmp_feed_list.get(user_id, [])
         err_code, new_id = self._get_next_rss_id(user_id)
         assert err_code == 0
@@ -105,6 +120,12 @@ class NewsFetcher:
         return 0, {}
 
     def rm_rss_feed(self, user_id: int, rss_feed_id: int):
+        """
+        Removes a RS feed from the list of users' RSS feeds.
+        :param user_id: ID of the user to remove the feed from
+        :param rss_feed_id: ID of the RSS feed to remove from the users' feed
+        :return: Error code
+        """
         if user_id not in self.tmp_feed_list.keys():
             return 1
         rss_feeds = self.get_rss_feed_list(user_id)[1]['rss_feed_list']
