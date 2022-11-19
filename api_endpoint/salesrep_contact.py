@@ -9,7 +9,7 @@ class SalesRepContact:
         self.users_to_contact.append(
             {
                 "username": username,
-                "phone_num": phone_num,
+                "phone": phone_num,
                 "email": email,
                 "zip": zip,
                 "timestamp": datetime.now().strftime("%m/%d/%Y")
