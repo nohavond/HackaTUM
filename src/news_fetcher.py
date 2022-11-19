@@ -30,6 +30,8 @@ class NewsFetcher:
     def __init__(self):
         self.tmp_feed_list = dict()
         self.cached_feeds = dict()
+        self.tmp_feed_list[0] = [{"feed_id": 0,
+                                  "feed_url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000115"}]
 
     def _get_news_single_rss(self, rss_feed: str):
         """
@@ -85,7 +87,7 @@ class NewsFetcher:
         for feed in rss_feeds["rss_feed_list"]:
             all_articles += self._get_news_single_rss(feed["feed_url"])
         all_articles.sort(key=lambda x: x["utc"], reverse=True)
-        return all_articles
+        return 0, all_articles
 
     def get_rss_feed_list(self, user_id: int):
         """

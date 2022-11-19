@@ -113,9 +113,9 @@ async def get_news(user_id: int):
 
 
 @app.post("/news/add_feed")
-async def add_feed(user_id: int, rss_feed_url: str, user: UserInDB = Depends(get_current_user)):
-    if user.id != user_id:
-        raise FORBIDDEN_EXCEPTION
+async def add_feed(user_id: int, rss_feed_url: str):
+    # if user.id != user_id:
+    #     raise FORBIDDEN_EXCEPTION
     err_code, res = news_fetcher.add_rss_feed(user_id, rss_feed_url)
     assert err_code == 0
     return res
@@ -140,4 +140,4 @@ async def get_feeds(user_id: int):
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("main:app", reload=True, host="192.168.43.52")
