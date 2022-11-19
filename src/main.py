@@ -23,6 +23,8 @@ from CUser import CUser
 from api_errors import ApiErrors
 from authentication import Authentication
 from news_fetcher import NewsFetcher
+from salesrep_contact import SalesRepContact
+from package_offers import PackageOffers
 
 app = FastAPI()  # the main API instance
 
@@ -30,6 +32,8 @@ app = FastAPI()  # the main API instance
 news_fetcher = NewsFetcher()
 authentication = Authentication()
 c_solar = CSolar()
+sales_rep_contact = SalesRepContact()
+package_offers = PackageOffers()
 
 # Dummy users for demonstration purposes
 dummy_user = CUser()
@@ -232,5 +236,23 @@ async def show_prices(period: str):
     return dummy_stock.get_prices(period)
 
 
+########################################
+#     PACKAGE OFFERS API ENDPOINTS     #
+########################################
+@app.post("/contacs/register_user_for_call")
+async def register_user_for_call(username: str, phone_num: str,
+                                 email: str, postcode: str):
+    sales_rep_contact.save_user_for_call(username=username, phone_num=phone_num,
+                                         email=email, zip=postcode)
+
+
+########################################
+#     PACKAGE OFFERS API ENDPOINTS     #
+########################################
+@app.post("/packages/get_offers")
+async def get_package_offers(offers: int):
+    return package_offers.get_package_offers()
+
+
 if __name__ == '__main__':
-    uvicorn.run("main:app", reload=True, host="192.168.43.52")
+    uvicorn.run("main:app", reload=True, host="131.159.198.100")
