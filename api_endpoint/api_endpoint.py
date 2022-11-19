@@ -255,4 +255,4 @@ async def get_package_offers(offers: int):
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", reload=True, host="131.159.198.100")
+    uvicorn.run("api_endpoint:app", reload=True, host="131.159.198.100")
