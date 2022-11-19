@@ -17,21 +17,12 @@ from api_errors import ApiErrors
 news_fetcher = NewsFetcher()
 app = FastAPI()
 
-ERR_USR_NOT_FOUND = "User not found in the RSS feed list"
-
-ERR_RSS_FEED_NOT_FOUND = "RSS feed not found for the specific user"
-
-
-# @app.get("/")
-# async def root():
-#     return {"Message": "Hello world!"}
-
 
 @app.get("/news/get_news")
 async def get_news(user_id: int):
     err_code, res = news_fetcher.get_news_all_rss(user_id)
     if err_code == 1:
-        raise HTTPException(406, ERR_USR_NOT_FOUND)
+        raise HTTPException(406, ApiErrors.ERR_USR_NOT_FOUND)
     return res
 
 
@@ -46,9 +37,9 @@ async def add_feed(user_id: int, rss_feed_url: str):
 async def remove_feed(user_id: int, rss_feed_id: int):
     err_code = news_fetcher.rm_rss_feed(user_id, rss_feed_id)
     if err_code == 1:
-        raise HTTPException(406, ERR_USR_NOT_FOUND)
+        raise HTTPException(406, ApiErrors.ERR_USR_NOT_FOUND)
     if err_code == 2:
-        raise HTTPException(406, ERR_RSS_FEED_NOT_FOUND)
+        raise HTTPException(406, ApiErrors.ERR_RSS_FEED_NOT_FOUND)
     return {}
 
 
@@ -56,7 +47,7 @@ async def remove_feed(user_id: int, rss_feed_id: int):
 async def get_feeds(user_id: int):
     err_code, res = news_fetcher.get_rss_feed_list(user_id)
     if err_code == 1:
-        raise HTTPException(406, ERR_USR_NOT_FOUND)
+        raise HTTPException(406, ApiErrors.ERR_USR_NOT_FOUND)
     return res
 
 
