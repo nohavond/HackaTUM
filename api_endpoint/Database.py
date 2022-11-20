@@ -30,6 +30,7 @@ class CDatabase:
         self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('cpessel7', '336-524-7466', 'kyakuntzov7@rediff.com', '58181-3031', '6/16/2022')",);
         self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('wbeiderbecke8', '259-281-0194', 'manchor8@scribd.com', '67938-2004', '10/1/2022')",);
         self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('crosenhaus9', '679-570-2066', 'areading9@ameblo.jp', '51329-2001', '4/4/2022')");
+        self.conn.commit()
         print('Data uploaded successfully.')
 
     def add_data(self, data):
