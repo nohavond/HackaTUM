@@ -4,7 +4,6 @@ import Database as db
 
 class SalesRepContact:
     def __init__(self, database: db.CDatabase):
-        self.users_to_contact = []
         self.database = database
 
     def save_user_for_call(self, username: str, phone_num: str, email: str, zip: str):
@@ -17,4 +16,5 @@ class SalesRepContact:
         })
 
     def get_users_for_call(self):
-        return self.users_to_contact
+        users = self.database.get_data()
+        return users

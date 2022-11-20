@@ -1,13 +1,10 @@
 import sqlite3
 from os.path import exists
 
-import pandas as pd
-
 
 class CDatabase:
     def __init__(self):
         self.name = 'users.db'
-        self.id = 1
         if not exists(self.name):
             self.conn = sqlite3.connect(self.name)
             # adding table for the users
@@ -39,3 +36,17 @@ class CDatabase:
         self.conn = sqlite3.connect(self.name)
         user_data = (data['username'], data['phone'], data['email'], data['zip'], data['timestamp'])
         self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values (?,?,?,?,?)", user_data);
+        self.conn.close()
+
+    def get_data(self):
+        cursor = self.conn.execute("SELECT id, username, phone, email, zip, timestamp from USERS")
+        d = [{}]
+        for row in cursor:
+            d.append({
+                "username": row[1],
+                "phone": row[2],
+                "email": row[3],
+                "zip": row[4],
+                "timestamp": row[5]
+            })
+        self.conn.close()
