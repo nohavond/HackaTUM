@@ -51,6 +51,7 @@ class NewsFetcher:
             article = {
                 "title": entry["title"],
                 "description": entry["description"],
+                "link": entry["link"],
                 "utc": time.mktime(entry["published_parsed"])
             }
             result.append(article)
