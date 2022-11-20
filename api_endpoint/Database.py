@@ -3,8 +3,8 @@ from os.path import exists
 
 
 class CDatabase:
-    def __init__(self):
-        self.name = 'users.db'
+    def __init__(self, name='users.db'):
+        self.name = name
         if not exists(self.name):
             self.conn = sqlite3.connect(self.name)
             # adding table for the users
@@ -16,22 +16,35 @@ class CDatabase:
                          ZIP INT                NOT NULL,
                          TIMESTAMP DATE         NOT NULL );''')
 
-            self.__upload_data()
             self.conn.close()
+            self.__upload_data()
+
 
     def __upload_data(self):
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('santhon0', '657-817-1288', 'nsteers0@meetup.com', '49884-122', '4/5/2022')");
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('dstanistreet1', '612-623-8329', 'itweedle1@issuu.com', '68703-056', '2/23/2022')");
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('mmacane2', '184-439-5728', 'khillum2@ebay.com', '0781-2865', '8/23/2022')");
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('mteaze3', '585-383-4362', 'mgoodchild3@howstuffworks.com', '36800-125', '6/26/2022')");
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('bguidera4', '372-107-8795', 'friglar4@walmart.com', '58232-0635', '1/16/2022')");
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('ihatfull5', '345-579-5158', 'rcheetham5@canalblog.com', '57520-0205', '6/21/2022')",);
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ( 'eoliva6', '234-991-6723', 'cpevie6@simplemachines.org', '55316-047', '11/17/2022')",);
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('cpessel7', '336-524-7466', 'kyakuntzov7@rediff.com', '58181-3031', '6/16/2022')",);
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('wbeiderbecke8', '259-281-0194', 'manchor8@scribd.com', '67938-2004', '10/1/2022')",);
-        self.conn.execute("insert into USER (username, phone, email, zip, timestamp) values ('crosenhaus9', '679-570-2066', 'areading9@ameblo.jp', '51329-2001', '4/4/2022')");
-        self.conn.commit()
+        self.conn = sqlite3.connect(self.name)
+        self.conn.execute(
+            "INSERT INTO USER (username, phone, email, zip, timestamp) values ('santhon0', '657-817-1288', 'nsteers0@meetup.com', '49884-122', '4/5/2022')");
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('dstanistreet1', '612-623-8329', 'itweedle1@issuu.com', '68703-056', '2/23/2022')");
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('mmacane2', '184-439-5728', 'khillum2@ebay.com', '0781-2865', '8/23/2022')");
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('mteaze3', '585-383-4362', 'mgoodchild3@howstuffworks.com', '36800-125', '6/26/2022')");
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('bguidera4', '372-107-8795', 'friglar4@walmart.com', '58232-0635', '1/16/2022')");
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('ihatfull5', '345-579-5158', 'rcheetham5@canalblog.com', '57520-0205', '6/21/2022')", );
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ( 'eoliva6', '234-991-6723', 'cpevie6@simplemachines.org', '55316-047', '11/17/2022')", );
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('cpessel7', '336-524-7466', 'kyakuntzov7@rediff.com', '58181-3031', '6/16/2022')", );
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('wbeiderbecke8', '259-281-0194', 'manchor8@scribd.com', '67938-2004', '10/1/2022')", );
+        self.conn.execute(
+            "insert into USER (username, phone, email, zip, timestamp) values ('crosenhaus9', '679-570-2066', 'areading9@ameblo.jp', '51329-2001', '4/4/2022')");
         print('Data uploaded successfully.')
+        self.conn.commit()
+        self.conn.close()
 
     def add_data(self, data):
         self.conn = sqlite3.connect(self.name)
@@ -40,7 +53,8 @@ class CDatabase:
         self.conn.close()
 
     def get_data(self):
-        cursor = self.conn.execute("SELECT id, username, phone, email, zip, timestamp from USERS")
+        conn = sqlite3.connect(self.name)
+        cursor = conn.execute("SELECT id, username, phone, email, zip, timestamp from USER")
         d = [{}]
         for row in cursor:
             d.append({
@@ -50,4 +64,7 @@ class CDatabase:
                 "zip": row[4],
                 "timestamp": row[5]
             })
-        self.conn.close()
+        conn.close()
+        d.pop(0)
+        return d
+
