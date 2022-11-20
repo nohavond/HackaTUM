@@ -27,6 +27,10 @@ from salesrep_contact import SalesRepContact
 from package_offers import PackageOffers
 from Database import CDatabase
 
+########################################
+#    Initialization of the FastAPI     #
+########################################
+
 app = FastAPI()  # the main API instance
 
 # Initialize database
