@@ -10,3 +10,8 @@ class App:
         users = load_users()
         df = pd.DataFrame(users)
         st.table(df)
+
+
+if __name__ == '__main__':
+    app = App()
+    app.run()
