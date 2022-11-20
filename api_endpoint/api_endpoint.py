@@ -30,7 +30,7 @@ from Database import CDatabase
 app = FastAPI()  # the main API instance
 
 # Initialize database
-db = CDatabase()
+db = CDatabase(r"C:\Users\Martin\Desktop\TUM\HackaTUM\db_data\users.db")
 
 # Instances of classes which save the current state of all the data
 news_fetcher = NewsFetcher()
